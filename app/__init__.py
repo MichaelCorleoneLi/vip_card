@@ -4,3 +4,49 @@
 # @Author  : lhy
 # @Time    : 2018/6/26 12:46
 """
+import logging
+
+from flask import Flask
+from flask_login import LoginManager
+from flask_sqlalchemy import SQLAlchemy
+from raven.contrib.flask import Sentry
+from werkzeug.contrib.fixers import ProxyFix
+
+from config import config
+
+log = logging.getLogger(__name__)
+
+db = SQLAlchemy(session_options={'expire_on_commit': False})
+sentry = Sentry()
+login_manager = LoginManager()
+# hashids = Hashids(min_length=5)
+
+
+def init_views(app):
+    pass
+    # from app.user import user
+    #
+    # app.register_blueprint(user)
+
+def init_extensions(app):
+    pass
+    login_manager.init_app(app)
+    db.init_app(app)
+
+    db.app = app
+    app.wsgi_app = ProxyFix(app.wsgi_app)
+
+
+class MyFlask(Flask):
+    pass
+
+
+def create_app(config_name):
+    app = MyFlask(__name__, instance_relative_config=True)
+
+    config[config_name].init_app()
+    init_extensions(app)
+    init_views(app)
+
+    log.info('Initalized app')
+    return app

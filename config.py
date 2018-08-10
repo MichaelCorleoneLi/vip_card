@@ -9,7 +9,11 @@ class Config():
     pass
 
 
-class DevelopmentConfig(Config):
+class DevConfig(Config):
+    pass
+
+
+class TestConfig():
     pass
 
 
@@ -17,4 +21,8 @@ class ProductionConfig(Config):
     pass
 
 
-Conf = DevelopmentConfig
+config = {
+    'dev': DevConfig(),
+    'test': TestConfig,
+    'production': ProductionConfig
+}
