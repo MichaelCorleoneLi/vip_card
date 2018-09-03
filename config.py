@@ -6,7 +6,8 @@
 """
 
 class Config():
-    pass
+    def init_app(self, app):
+        app.config.from_object(self)
 
 
 class DevConfig(Config):

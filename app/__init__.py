@@ -44,7 +44,7 @@ class MyFlask(Flask):
 def create_app(config_name):
     app = MyFlask(__name__, instance_relative_config=True)
 
-    config[config_name].init_app()
+    config[config_name].init_app(app)
     init_extensions(app)
     init_views(app)
 
