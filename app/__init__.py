@@ -12,6 +12,7 @@ from flask_sqlalchemy import SQLAlchemy
 from raven.contrib.flask import Sentry
 from werkzeug.contrib.fixers import ProxyFix
 
+from app.hashids import Hashids
 from config import config
 
 log = logging.getLogger(__name__)
@@ -19,17 +20,15 @@ log = logging.getLogger(__name__)
 db = SQLAlchemy(session_options={'expire_on_commit': False})
 sentry = Sentry()
 login_manager = LoginManager()
-# hashids = Hashids(min_length=5)
+hashids = Hashids(min_length=5)
 
 
 def init_views(app):
-    pass
-    # from app.user import user
-    #
-    # app.register_blueprint(user)
+    from app.views.boss import boss
+
+    app.register_blueprint(boss)
 
 def init_extensions(app):
-    pass
     login_manager.init_app(app)
     db.init_app(app)
 
