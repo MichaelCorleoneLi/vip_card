@@ -32,7 +32,7 @@ class Config():
 
 class DevConfig(Config):
     SQLALCHEMY_ECHO = True
-    SQLALCHEMY_DATABASE_URI = 'mysql+cymsql://root:123456@127.0.0.1/order_food'
+    SQLALCHEMY_DATABASE_URI = 'mysql+cymysql://root:123456@127.0.0.1/order_food'
 
 
 class TestConfig():

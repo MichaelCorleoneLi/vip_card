@@ -4,7 +4,8 @@ from flask_migrate import Migrate, MigrateCommand
 from flask_script import Manager
 from flask_script.commands import ShowUrls, Clean
 
-load_dotenv()
+dotenv_path = os.path.join(os.path.dirname(__file__), '.env')
+load_dotenv(dotenv_path)
 
 from app import create_app, db
 
