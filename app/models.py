@@ -48,7 +48,13 @@ class Boss(db.Model, UserMixin, ToDictMixin):
 
     id = db.Column(UNSIGNED_INT, primary_key=True, autoincrement=True)
     # 微信昵称
-    name = db.Column(db.String(64), nullable=False)
+    nick_name = db.Column(db.String(64), nullable=False)
+    gender = db.Column(db.Integer, nullable=True)
+    city = db.Column(db.String(40), nullable=True)
+    province = db.Column(db.String(40), nullable=True)
+    country = db.Column(db.String(40), nullable=True)
+    avatarUrl = db.Column(db.String(200), nullable=True)
+    cashbox = db.Column(db.Numeric(8,2), default=0.0)
     # 银行卡
     band_card_number = db.Column(db.String(32), nullable=True)
     is_deleted = db.Column(db.Boolean, default=False)
@@ -74,6 +80,13 @@ class Restaurant():
 
     boss = db.relationship('Boss', back_populates='restaurants')
     foods = db.relationship('Food', back_populates='restaurant')
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'name': self.name,
+            'introduction': self.introduction
+        }
 
 
 class Food():
@@ -119,9 +132,22 @@ class Customer(db.Model, UserMixin, ToDictMixin):
 
     id = db.Column(UNSIGNED_INT, primary_key=True, autoincrement=True)
     # 昵称
-    name = db.Column(db.String(64), nullable=False)
+    nick_name = db.Column(db.String(64), nullable=False)
+    gender = db.Column(db.Integer, nullable=True)
+    city = db.Column(db.String(40), nullable=True)
+    province = db.Column(db.String(40), nullable=True)
+    country = db.Column(db.String(40), nullable=True)
+    avatarUrl = db.Column(db.String(200), nullable=True)
+    cashbox = db.Column(db.Numeric(8,2), default=0.0)
+
     is_deleted = db.Column(db.Boolean, default=False)
 
     orders = db.relationship('Order', back_populates='customer')
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'nick_name': self.nick_name
+        }
 
 # endregion
