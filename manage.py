@@ -17,6 +17,14 @@ manager.add_command('show-urls', ShowUrls())
 manager.add_command('clean', Clean())
 manager.add_command('db', MigrateCommand)
 
+
+@manager.shell
+def make_shell_context():
+    import app.models as models
+    return dict(models.__dict__, app=app, db=db)
+
+
+@manager.command
 def init_db():
     import sqlalchemy
 

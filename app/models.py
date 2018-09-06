@@ -62,9 +62,35 @@ class Boss(db.Model, UserMixin, ToDictMixin):
     restaurants = db.relationship('Restaurant', back_populates='boss')
 
 
+class Customer(db.Model, UserMixin, ToDictMixin):
+    """顾客"""
+    __tablename__ = 'customer'
+    auto_load_attrs = ('id')
+
+    id = db.Column(UNSIGNED_INT, primary_key=True, autoincrement=True)
+    # 昵称
+    nick_name = db.Column(db.String(64), nullable=False)
+    gender = db.Column(db.Integer, nullable=True)
+    city = db.Column(db.String(40), nullable=True)
+    province = db.Column(db.String(40), nullable=True)
+    country = db.Column(db.String(40), nullable=True)
+    avatarUrl = db.Column(db.String(200), nullable=True)
+    cashbox = db.Column(db.Numeric(8,2), default=0.0)
+
+    is_deleted = db.Column(db.Boolean, default=False)
+
+    orders = db.relationship('Order', back_populates='customer')
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'nick_name': self.nick_name
+        }
+
+
 class Restaurant():
     """餐馆"""
-    __tablename = 'Restaurant'
+    __tablename__ = 'Restaurant'
     auto_load_attrs = ('id', 'ref_boss_id')
 
     id = db.Column(UNSIGNED_INT, primary_key=True, autoincrement=True)
@@ -91,7 +117,7 @@ class Restaurant():
 
 class Food():
     """菜品"""
-    __tablename = 'Food'
+    __tablename__ = 'Food'
     auto_load_attrs = ('id', 'name')
 
     id = db.Column(UNSIGNED_INT, primary_key=True, autoincrement=True)
@@ -103,12 +129,13 @@ class Food():
     ref_restaurant_id = db.Column(UNSIGNED_INT, db.ForeignKey(Restaurant.id), nullable=False)
     is_deleted = db.Column(db.Boolean, default=False)
 
-    restaurant = db.relationship('Restaurant', back_populaters='foods')
+    restaurant = db.relationship('Restaurant', back_populates='foods')
+    consume_history = db.relationship('OrderItem', back_populates='food')
 
 
 class Order():
     """订单"""
-    __tablename = 'order'
+    __tablename__ = 'order'
     auto_load_attrs = ('id')
 
     id = db.Column(UNSIGNED_INT, primary_key=True, autoincrement=True)
@@ -123,31 +150,20 @@ class Order():
     is_deleted = db.Column(db.Boolean, default=False)
 
     customer = db.relationship('Customer', back_populates='orders')
+    order_items = db.relationship('OrderItem', back_populates='order')
 
 
-class Customer(db.Model, UserMixin, ToDictMixin):
-    """顾客"""
-    __tablename = 'customer'
+class OrderItem():
+    __tablename__ = 'order_item'
     auto_load_attrs = ('id')
 
     id = db.Column(UNSIGNED_INT, primary_key=True, autoincrement=True)
-    # 昵称
-    nick_name = db.Column(db.String(64), nullable=False)
-    gender = db.Column(db.Integer, nullable=True)
-    city = db.Column(db.String(40), nullable=True)
-    province = db.Column(db.String(40), nullable=True)
-    country = db.Column(db.String(40), nullable=True)
-    avatarUrl = db.Column(db.String(200), nullable=True)
-    cashbox = db.Column(db.Numeric(8,2), default=0.0)
-
+    ref_food_id = db.Column(UNSIGNED_INT, db.ForeignKey(Food.id), nullable=False)
+    ref_order_id = db.Column(UNSIGNED_INT, db.ForeignKey(Order.id), nullable=False)
     is_deleted = db.Column(db.Boolean, default=False)
+    test = db.Column(db.String(64))
 
-    orders = db.relationship('Order', back_populates='customer')
-
-    def to_dict(self):
-        return {
-            'id': self.id,
-            'nick_name': self.nick_name
-        }
+    food = db.relationship('Food', back_populates='consume_history')
+    order = db.relationship('Order', back_populates='order_items')
 
 # endregion
