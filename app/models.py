@@ -112,7 +112,7 @@ class Order():
     customer = db.relationship('Customer', back_populates='orders')
 
 
-class Customer():
+class Customer(db.Model, UserMixin, ToDictMixin):
     """顾客"""
     __tablename = 'customer'
     auto_load_attrs = ('id')
