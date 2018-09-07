@@ -7,10 +7,10 @@
 from flask_login import current_user
 
 from app.utils import customer_required
-from app.views.customer import  customer
+from . import  api
 
 
-@customer.route('/order_list')
+@api.route('/order_list')
 @customer_required
 def order_list():
     return {'order_list': [order.to_dict() for order in current_user.orders]}

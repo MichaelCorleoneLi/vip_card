@@ -28,11 +28,10 @@ hashids = Hashids(min_length=5)
 
 
 def init_views(app):
-    from app.views.boss import boss
-    from app.views.customer import customer
+    from app.views.api import api
 
-    app.register_blueprint(boss)
-    app.register_blueprint(customer)
+    app.register_blueprint(api)
+
 
 def init_extensions(app):
     login_manager.init_app(app)

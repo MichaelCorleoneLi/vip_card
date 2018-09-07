@@ -47,6 +47,7 @@ class Boss(db.Model, UserMixin, ToDictMixin):
     auto_load_attrs = ('id', 'name')
 
     id = db.Column(UNSIGNED_INT, primary_key=True, autoincrement=True)
+    openid = db.Column(db.String(64), unique=True, nullable=False)
     # 微信昵称
     nick_name = db.Column(db.String(64), nullable=False)
     gender = db.Column(db.Integer, nullable=True)
@@ -64,10 +65,11 @@ class Boss(db.Model, UserMixin, ToDictMixin):
 
 class Customer(db.Model, UserMixin, ToDictMixin):
     """顾客"""
-    __tablename__ = 'customer'
+    __tablename__ = 'Customer'
     auto_load_attrs = ('id')
 
     id = db.Column(UNSIGNED_INT, primary_key=True, autoincrement=True)
+    openid = db.Column(db.String(64), unique=True, nullable=False)
     # 昵称
     nick_name = db.Column(db.String(64), nullable=False)
     gender = db.Column(db.Integer, nullable=True)
@@ -88,7 +90,7 @@ class Customer(db.Model, UserMixin, ToDictMixin):
         }
 
 
-class Restaurant():
+class Restaurant(db.Model):
     """餐馆"""
     __tablename__ = 'Restaurant'
     auto_load_attrs = ('id', 'ref_boss_id')
@@ -115,7 +117,7 @@ class Restaurant():
         }
 
 
-class Food():
+class Food(db.Model):
     """菜品"""
     __tablename__ = 'Food'
     auto_load_attrs = ('id', 'name')
@@ -132,10 +134,17 @@ class Food():
     restaurant = db.relationship('Restaurant', back_populates='foods')
     consume_history = db.relationship('OrderItem', back_populates='food')
 
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'name': self.name,
+            'price': self.price
+        }
 
-class Order():
+
+class Order(db.Model):
     """订单"""
-    __tablename__ = 'order'
+    __tablename__ = 'Order'
     auto_load_attrs = ('id')
 
     id = db.Column(UNSIGNED_INT, primary_key=True, autoincrement=True)
@@ -153,8 +162,8 @@ class Order():
     order_items = db.relationship('OrderItem', back_populates='order')
 
 
-class OrderItem():
-    __tablename__ = 'order_item'
+class OrderItem(db.Model):
+    __tablename__ = 'OrderItem'
     auto_load_attrs = ('id')
 
     id = db.Column(UNSIGNED_INT, primary_key=True, autoincrement=True)
