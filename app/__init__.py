@@ -36,6 +36,7 @@ def init_views(app):
 def init_extensions(app):
     login_manager.init_app(app)
     db.init_app(app)
+    hashids.init_app(app)
 
     db.app = app
     app.wsgi_app = ProxyFix(app.wsgi_app)

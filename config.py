@@ -4,10 +4,13 @@
 # @Author  : lhy
 # @Time    : 2018/6/26 22:49
 """
+import os
 import re
 
 
 class Config():
+    SECRET_KEY = os.environ['SECRET_KEY']
+
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     SQLALCHEMY_COMMIT_ON_TEARDOWN = True
     SQLALCHEMY_DATABASE_URI = None

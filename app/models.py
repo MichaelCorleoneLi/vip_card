@@ -44,7 +44,7 @@ class ToDictMixin:
 class Boss(db.Model, UserMixin, ToDictMixin):
     """老板"""
     __tablename__ = 'Boss'
-    auto_load_attrs = ('id', 'name')
+    auto_load_attrs = ('id', 'nick_name')
 
     id = db.Column(UNSIGNED_INT, primary_key=True, autoincrement=True)
     openid = db.Column(db.String(64), unique=True, nullable=False)

@@ -9,4 +9,4 @@ from flask import Blueprint
 
 api = Blueprint('api', __name__, url_prefix='/api')
 
-from . import boss, customer, restaurant
+from . import admin, boss, customer, restaurant
