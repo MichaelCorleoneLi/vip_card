@@ -73,7 +73,7 @@ class ServerError(APIError):
 
 
 class errno:
-    CUSTOMER_IS_NOT_ALLOWED = 1, _('This interface is not for customer')
+    CUSTOMER_IS_NOT_ALLOWED = 1, _('This interface is not for api')
     BOSS_IS_NOT_ALLOWED = 1, _('This interface is not for boss')
     # 这些代码不是在一个有效的 request context 中执行的，所以必须用 lazy_gettext
     UNKNOWN = 100, _('Unknown error')

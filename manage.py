@@ -1,22 +1,22 @@
 import os
 from dotenv import load_dotenv
 from flask_migrate import Migrate, MigrateCommand
-from flask_script import Manager
-from flask_script.commands import ShowUrls, Clean
 
 dotenv_path = os.path.join(os.path.dirname(__file__), '.env')
 load_dotenv(dotenv_path)
 
-from app import create_app, db
+from app import create_app, db, models
 
 app = create_app(os.getenv('FLASK_CONFIG', 'default'))
-manager = Manager(app)
 migrate = Migrate(app, db)
 
-manager.add_command('show-urls', ShowUrls())
-manager.add_command('clean', Clean())
-manager.add_command('db', MigrateCommand)
 
+@app.shell_context_processor
+def make_shell_context():
+    return dict(models=models, app=app, db=db)
+
+
+@app.cli.command
 def init_db():
     import sqlalchemy
 
@@ -26,10 +26,3 @@ def init_db():
     engine.execute("CREATE DATABASE IF NOT EXISTS {} CHAR SET 'utf8mb4'".format(database))
 
     db.create_all()
-
-
-if __name__ == '__main__':
-    try:
-        manager.run()
-    except KeyboardInterrupt:
-        print('Shutting down')

@@ -7,6 +7,6 @@
 
 from flask import Blueprint
 
-boss = Blueprint('boss', __name__, url_prefix='/boss')
+api = Blueprint('api', __name__, url_prefix='/api')
 
-from app.views.boss import views
+from . import admin, boss, customer, restaurant
