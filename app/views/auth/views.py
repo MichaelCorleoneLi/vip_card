@@ -14,8 +14,8 @@ from werkzeug.routing import ValidationError
 
 from app import login_manager
 from app.errors import AuthError, errno
-from app.models import Boss, Customer
-from app.utils import boss_or_customer, UserType
+from app.models import Admin, User
+from app.utils import admin_or_user, UserType
 from app.views.auth import auth
 from app.views.auth.params import LOGIN
 
@@ -65,11 +65,11 @@ def validate_input(schema):
 
 @login_manager.user_loader
 def load_user(user_id):
-    user_type = boss_or_customer(user_id)
-    if user_type == UserType.BOSS:
-        user = Boss.query.get(user_id)
+    user_type = admin_or_user(user_id)
+    if user_type == UserType.ADMIN:
+        user = Admin.query.get(user_id)
     else:
-        user = Customer.query.get(user_id)
+        user = User.query.get(user_id)
     return user
 
 
@@ -78,6 +78,6 @@ def load_user(user_id):
 def login(data):
     # 微信验证登陆
     # 获取用户
-    user = Boss.query.get(1)
+    user = Admin.query.get(1)
     login_user(user)
     return {'success': True}

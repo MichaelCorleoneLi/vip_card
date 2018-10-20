@@ -16,21 +16,21 @@ from app.errors import errno, AuthError
 
 
 class UserType:
-    BOSS = 0
-    CUSTOMER = 1
+    ADMIN = 0
+    USER = 1
 
 
-def boss_or_customer(id):
+def admin_or_user(id):
     if 0 < id < 5000:
-        return UserType.BOSS
+        return UserType.ADMIN
     else:
-        return UserType.CUSTOMER
+        return UserType.USER
 
 
-def boss_required(func):
+def admin_required(func):
     @functools.wraps(func)
     def decorator(*args, **kwargs):
-        if boss_or_customer(current_user.id) != UserType.BOSS:
+        if admin_or_user(current_user.id) != UserType.ADMIN:
             raise AuthError(errno.CUSTOMER_IS_NOT_ALLOWED)
 
         return func(*args, **kwargs)
@@ -38,10 +38,10 @@ def boss_required(func):
     return login_required(decorator)
 
 
-def customer_required(func):
+def user_required(func):
     @functools.wraps(func)
     def decorator(*args, **kwargs):
-        if boss_or_customer(current_user.id) != UserType.CUSTOMER:
+        if admin_or_user(current_user.id) != UserType.USER:
             raise AuthError(errno.BOSS_IS_NOT_ALLOWED)
 
         return func(*args, **kwargs)

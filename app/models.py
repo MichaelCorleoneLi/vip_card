@@ -49,6 +49,8 @@ class Admin(db.Model, UserMixin, ToDictMixin):
     username = db.Column(db.String(64), nullable=False)
     create_time = db.Column(db.DateTime, default=datetime.datetime.now())
 
+    shops = db.relationship('shop', back_populates='admin')
+
 
 class User(db.Model, UserMixin, ToDictMixin):
     """用户"""
@@ -58,6 +60,14 @@ class User(db.Model, UserMixin, ToDictMixin):
     id = db.Column(UNSIGNED_INT, primary_key=True, autoincrement=True)
     username = db.Column(db.String(64), nullable=False)
     create_time = db.Column(db.DateTime, default=datetime.datetime.now())
+
+    cards = db.relationship('card', back_populates='user')
+    @property
+    def orders(self):
+        record_list = []
+        for card in self.cards:
+            record_list.extend(card.records)
+        return record_list
 
 
 class Shop():
@@ -71,7 +81,8 @@ class Shop():
     admin_id = db.Column(UNSIGNED_INT, db.ForeignKey(Admin.id), nullable=False)
     intro = db.Column(db.Text, nullable=True)
 
-    admin = db.relationship('admin', back_populaters='shops')
+    admin = db.relationship('admin', back_populates='shops')
+    cards = db.relationship('card', back_populates='shop')
 
     def to_dict(self):
         return {
@@ -93,8 +104,9 @@ class Card():
     balance = db.Column(db.Float, nullable=False)
     discount = db.Column(db.Float, nullable=False)
 
-    user = db.relationship('user', back_populaters='cards')
-    shop = db.relationship('shop', back_populaters='cards')
+    user = db.relationship('user', back_populates='cards')
+    shop = db.relationship('shop', back_populates='cards')
+    records = db.relationship('record', back_populates='card')
 
     def to_dict(self):
         return {
@@ -116,8 +128,8 @@ class Record():
     money = db.Column(db.Float, nullable=False)
     time = db.Column(db.DateTime, default=datetime.datetime.now())
 
-    card = db.relationship('card', back_populaters='records')
-    shop = db.relationship('shop', back_populaters='records')
+    card = db.relationship('card', back_populates='records')
+    shop = db.relationship('shop', back_populates='records')
 
     def to_dict(self):
         return {
