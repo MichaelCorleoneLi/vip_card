@@ -49,7 +49,7 @@ class Admin(db.Model, UserMixin, ToDictMixin):
     username = db.Column(db.String(64), nullable=False)
     create_time = db.Column(db.DateTime, default=datetime.datetime.now())
 
-    shops = db.relationship('shop', back_populates='admin')
+    # shops = db.relationship('Shop', back_populates='admin')
 
 
 class User(db.Model, UserMixin, ToDictMixin):
@@ -61,7 +61,8 @@ class User(db.Model, UserMixin, ToDictMixin):
     username = db.Column(db.String(64), nullable=False)
     create_time = db.Column(db.DateTime, default=datetime.datetime.now())
 
-    cards = db.relationship('card', back_populates='user')
+    # cards = db.relationship('Card', back_populates='user')
+
     @property
     def orders(self):
         record_list = []
@@ -72,7 +73,7 @@ class User(db.Model, UserMixin, ToDictMixin):
 
 class Shop():
     """店铺"""
-    __tablename = 'shop'
+    __tablename__ = 'shop'
     auto_load_attrs = ('id', 'name')
 
     id = db.Column(UNSIGNED_INT, primary_key=True, autoincrement=True)
@@ -81,8 +82,8 @@ class Shop():
     admin_id = db.Column(UNSIGNED_INT, db.ForeignKey(Admin.id), nullable=False)
     intro = db.Column(db.Text, nullable=True)
 
-    admin = db.relationship('admin', back_populates='shops')
-    cards = db.relationship('card', back_populates='shop')
+    admin = db.relationship('Admin', back_populates='shops')
+    cards = db.relationship('Card', back_populates='shop')
 
     def to_dict(self):
         return {
@@ -95,7 +96,7 @@ class Shop():
 
 class Card():
     """vip卡"""
-    __tablename = 'card'
+    __tablename__ = 'card'
     auto_load_attrs = ('id')
 
     id = db.Column(UNSIGNED_INT, primary_key=True, autoincrement=True)
@@ -104,9 +105,9 @@ class Card():
     balance = db.Column(db.Float, nullable=False)
     discount = db.Column(db.Float, nullable=False)
 
-    user = db.relationship('user', back_populates='cards')
-    shop = db.relationship('shop', back_populates='cards')
-    records = db.relationship('record', back_populates='card')
+    user = db.relationship('User', back_populates='cards')
+    shop = db.relationship('Shop', back_populates='cards')
+    records = db.relationship('Record', back_populates='card')
 
     def to_dict(self):
         return {
@@ -119,7 +120,7 @@ class Card():
 
 class Record():
     """消费记录"""
-    __tablename = 'record'
+    __tablename__ = 'record'
     auto_load_attrs = ('id')
 
     id = db.Column(UNSIGNED_INT, primary_key=True, autoincrement=True)
@@ -128,8 +129,8 @@ class Record():
     money = db.Column(db.Float, nullable=False)
     time = db.Column(db.DateTime, default=datetime.datetime.now())
 
-    card = db.relationship('card', back_populates='records')
-    shop = db.relationship('shop', back_populates='records')
+    card = db.relationship('Card', back_populates='records')
+    shop = db.relationship('Shop', back_populates='records')
 
     def to_dict(self):
         return {

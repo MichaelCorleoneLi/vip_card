@@ -7,9 +7,9 @@
 from flask_login import current_user
 
 from app import db
-from app.models import Card
 from app.utils import user_required
-from . import  api
+from app.models import Card
+from . import api
 
 
 @api.route('/record_list')

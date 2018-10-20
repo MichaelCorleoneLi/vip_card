@@ -12,12 +12,11 @@ from flask_login import login_user
 from jsonschema import Draft4Validator
 from werkzeug.routing import ValidationError
 
-from app import login_manager
+from app import login_manager, db
 from app.errors import AuthError, errno
 from app.models import Admin, User
 from app.utils import admin_or_user, UserType
 from app.views.auth import auth
-from app.views.auth.params import LOGIN
 
 
 def validate_input(schema):
@@ -74,10 +73,11 @@ def load_user(user_id):
 
 
 @auth.route('/login', methods=['POST'])
-@validate_input(LOGIN)
-def login(data):
+# @validate_input(LOGIN)
+def login():
     # 微信验证登陆
     # 获取用户
-    user = Admin.query.get(1)
+    user = db.session.query(Admin).get(1)
+    # user = Admin.query.get(1)
     login_user(user)
     return {'success': True}

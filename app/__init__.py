@@ -29,8 +29,10 @@ hashids = Hashids(min_length=5)
 
 def init_views(app):
     from app.views.api import api
+    from app.views.auth import auth
 
     app.register_blueprint(api)
+    app.register_blueprint(auth)
 
 
 def init_extensions(app):

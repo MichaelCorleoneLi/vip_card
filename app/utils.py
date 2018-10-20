@@ -21,6 +21,9 @@ class UserType:
 
 
 def admin_or_user(id):
+    if isinstance(id, str):
+        id = int(id)
+
     if 0 < id < 5000:
         return UserType.ADMIN
     else:
