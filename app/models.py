@@ -49,7 +49,7 @@ class Admin(db.Model, UserMixin, ToDictMixin):
     username = db.Column(db.String(64), nullable=False)
     create_time = db.Column(db.DateTime, default=datetime.datetime.now())
 
-    # shops = db.relationship('Shop', back_populates='admin')
+    shops = db.relationship('Shop', back_populates='admin')
 
 
 class User(db.Model, UserMixin, ToDictMixin):
@@ -61,7 +61,7 @@ class User(db.Model, UserMixin, ToDictMixin):
     username = db.Column(db.String(64), nullable=False)
     create_time = db.Column(db.DateTime, default=datetime.datetime.now())
 
-    # cards = db.relationship('Card', back_populates='user')
+    cards = db.relationship('Card', back_populates='user')
 
     @property
     def orders(self):
@@ -71,7 +71,7 @@ class User(db.Model, UserMixin, ToDictMixin):
         return record_list
 
 
-class Shop():
+class Shop(db.Model, ToDictMixin):
     """店铺"""
     __tablename__ = 'shop'
     auto_load_attrs = ('id', 'name')
@@ -79,11 +79,12 @@ class Shop():
     id = db.Column(UNSIGNED_INT, primary_key=True, autoincrement=True)
     name = db.Column(db.String(63), nullable=False)
     address = db.Column(db.String(255), nullable=False)
-    admin_id = db.Column(UNSIGNED_INT, db.ForeignKey(Admin.id), nullable=False)
+    admin_id = db.Column(UNSIGNED_INT, db.ForeignKey('admin.id'), nullable=False)
     intro = db.Column(db.Text, nullable=True)
 
     admin = db.relationship('Admin', back_populates='shops')
     cards = db.relationship('Card', back_populates='shop')
+    records = db.relationship('Record', back_populates='shop')
 
     def to_dict(self):
         return {
@@ -94,14 +95,14 @@ class Shop():
         }
 
 
-class Card():
+class Card(db.Model, ToDictMixin):
     """vip卡"""
     __tablename__ = 'card'
     auto_load_attrs = ('id')
 
     id = db.Column(UNSIGNED_INT, primary_key=True, autoincrement=True)
-    user_id = db.Column(UNSIGNED_INT, db.ForeignKey(User.id), nullable=False)
-    shop_id = db.Column(UNSIGNED_INT, db.ForeignKey(Shop.id), nullable=False)
+    user_id = db.Column(UNSIGNED_INT, db.ForeignKey('user.id'), nullable=False)
+    shop_id = db.Column(UNSIGNED_INT, db.ForeignKey('shop.id'), nullable=False)
     balance = db.Column(db.Float, nullable=False)
     discount = db.Column(db.Float, nullable=False)
 
@@ -118,14 +119,14 @@ class Card():
         }
 
 
-class Record():
+class Record(db.Model, ToDictMixin):
     """消费记录"""
     __tablename__ = 'record'
     auto_load_attrs = ('id')
 
     id = db.Column(UNSIGNED_INT, primary_key=True, autoincrement=True)
-    card_id = db.Column(UNSIGNED_INT, db.ForeignKey(Card.id), nullable=False)
-    shop_id = db.Column(UNSIGNED_INT, db.ForeignKey(Shop.id), nullable=False)
+    card_id = db.Column(UNSIGNED_INT, db.ForeignKey('card.id'), nullable=False)
+    shop_id = db.Column(UNSIGNED_INT, db.ForeignKey('shop.id'), nullable=False)
     money = db.Column(db.Float, nullable=False)
     time = db.Column(db.DateTime, default=datetime.datetime.now())
 
