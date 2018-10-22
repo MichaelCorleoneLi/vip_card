@@ -8,11 +8,11 @@ from flask_login import current_user
 
 from app import db
 from app.utils import user_required
-from app.models import Card
+from app.models import Card, Shop
 from . import api
 
 
-@api.route('/record_list')
+@api.route('/user/record_list')
 @user_required
 def order_list():
     return {
@@ -21,7 +21,7 @@ def order_list():
     }
 
 
-@api.route('/card_list')
+@api.route('/user/card_list')
 @user_required
 def card_list():
     return {
@@ -30,13 +30,25 @@ def card_list():
     }
 
 
-@api.route('/card_detail/<int:card_id>')
+@api.route('/user/card_detail/<int:card_id>')
 @user_required
 def card_detail(card_id):
     card = db.session.query(Card).get(card_id)
     return {
         'success': True,
         'data': {
-            'card': card.to_dict()
+            'card': card.to_dict() if card else None
+        }
+    }
+
+
+@api.route('/user/shop_detail/<int:shop_id>')
+@user_required
+def user_shop_detail(shop_id):
+    shop = db.session.query(Shop).get(shop_id)
+    return {
+        'success': True,
+        'data': {
+            'shop': shop.to_dict() if shop else None
         }
     }

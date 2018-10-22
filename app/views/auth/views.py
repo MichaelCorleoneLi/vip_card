@@ -77,7 +77,22 @@ def load_user(user_id):
 def login():
     # 微信验证登陆
     # 获取用户
-    user = db.session.query(Admin).get(1)
-    # user = Admin.query.get(1)
+    # admin = db.session.query(Admin).get(1)
+    # login_user(admin)
+    user = User.query.get(5001)
+    login_user(user)
+    return {'success': True}
+
+
+@auth.route('/admin_login', methods=['POST'])
+def admin_login():
+    admin = Admin.query.get(1)
+    login_user(admin)
+    return {'success': True}
+
+
+@auth.route('/user_login', methods=['POST'])
+def user_login():
+    user = User.query.get(5001)
     login_user(user)
     return {'success': True}

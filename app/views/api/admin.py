@@ -7,21 +7,36 @@ from app.models import Shop
 from . import api
 
 
-@api.route('/shop_card_list/<int:shop_id>')
+@api.route('/admin/shop_card_list/<int:shop_id>')
 @admin_required
 def shop_card_list(shop_id):
     shop = db.session.query(Shop).get(shop_id)
-    return {'shop_card_list': [card.to_dict() for card in shop.cards]}
+    return {
+        'success': True,
+        'data': {
+            'shop_card_list': [card.to_dict() for card in shop.cards]
+        }
+    }
 
 
-@api.route('/shop_list')
+@api.route('/admin/shop_list')
 @admin_required
-def shop_list():
-    return {'shop_list': [shop.to_dict() for shop in current_user.shops]}
+def admin_shop_list():
+    return {
+        'success': True,
+        'data': {
+            'shop_list': [shop.to_dict() for shop in current_user.shops]
+        }
+    }
 
 
-@api.route('/shop_detail/<int:shop_id>')
+@api.route('/admin/shop_detail/<int:shop_id>')
 @admin_required
 def shop_detail(shop_id):
     shop = db.session.query(Shop).get(shop_id)
-    return shop.to_dict()
+    return {
+        'success': True,
+        'data': {
+            'shop': shop.to_dict()
+        }
+    }
