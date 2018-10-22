@@ -8,14 +8,14 @@ import functools
 from http.client import HTTPException
 
 from flask import request, current_app
-from flask_login import login_user
+from flask_login import login_user, logout_user
 from jsonschema import Draft4Validator
 from werkzeug.routing import ValidationError
 
 from app import login_manager, db
 from app.errors import AuthError, errno
 from app.models import Admin, User
-from app.utils import admin_or_user, UserType
+from app.utils import admin_or_user, UserType, admin_required, user_required
 from app.views.auth import auth
 
 
@@ -84,15 +84,29 @@ def login():
     return {'success': True}
 
 
-@auth.route('/admin_login', methods=['POST'])
+@auth.route('/admin/login', methods=['POST'])
 def admin_login():
     admin = Admin.query.get(1)
     login_user(admin)
     return {'success': True}
 
 
-@auth.route('/user_login', methods=['POST'])
+@auth.route('/admin/logout', methods=['POST'])
+@admin_required
+def admin_logout():
+    logout_user()
+    return {'success': True}
+
+
+@auth.route('/user/login', methods=['POST'])
 def user_login():
     user = User.query.get(5001)
     login_user(user)
+    return {'success': True}
+
+
+@auth.route('/user/logout', methods=['POST'])
+@user_required
+def user_logout():
+    logout_user()
     return {'success': True}
