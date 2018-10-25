@@ -35,7 +35,7 @@ class Config():
 
 class DevConfig(Config):
     SQLALCHEMY_ECHO = True
-    SQLALCHEMY_DATABASE_URI = 'mysql+cymysql://root:123456@127.0.0.1/vip_card'
+    SQLALCHEMY_DATABASE_URI = 'mysql+cymysql://root:liyuan123@127.0.0.1/vip_card'
 
 
 class TestConfig():

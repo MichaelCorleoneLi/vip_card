@@ -1,7 +1,6 @@
 import os
 
 from dotenv import load_dotenv
-from flask_migrate import Migrate
 
 dotenv_path = os.path.join(os.path.dirname(__file__), '.env')
 load_dotenv(dotenv_path)
@@ -9,7 +8,6 @@ load_dotenv(dotenv_path)
 from app import create_app, db, models
 
 app = create_app(os.getenv('FLASK_CONFIG', 'default'))
-migrate = Migrate(app, db)
 
 
 @app.shell_context_processor
